@@ -4,4 +4,4 @@ A description of this package.
 
 #### Third Party
 
-(HDWallrtKit)  [https://github.com/essentiaone/HDWallet]
+(HDWalletKit)  [https://github.com/essentiaone/HDWallet]

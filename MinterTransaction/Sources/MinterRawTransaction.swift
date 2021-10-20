@@ -11,12 +11,12 @@ public class MinterRawTransaction {
     public var gasCoin: Int
     public var type: TransactionType
     public var data: TransactionData
-    public var payload: Data
+    public var payload: String
     public var serviceData: Data
     public var signatureType: SignatureType
     public var signatureData: Data?
     
-    public init(chainId: Int, nonce: Int, type: TransactionType, gasCoin: Int, gasPrice: Int, signatureType: SignatureType, data: TransactionData, payload: Data = Data.init(), signatureData: Data = Data.init(), serviceData: Data = Data.init()){
+    public init(chainId: Int, nonce: Int, type: TransactionType, gasCoin: Int, gasPrice: Int, signatureType: SignatureType, data: TransactionData, payload: String = "", signatureData: Data = Data.init(), serviceData: Data = Data.init()){
         self.chainId = chainId
         self.nonce = nonce
         self.type = type

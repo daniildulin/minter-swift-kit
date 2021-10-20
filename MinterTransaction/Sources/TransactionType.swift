@@ -29,12 +29,12 @@ public enum TransactionType: Int {
     case BuySwapPool                  = 0x18
     case SellAllSwapPool              = 0x19
     case EditCommissionCandidate      = 0x1A
-    case MoveStake                    = 0x1B
+    case MoveStake                    = 0x1B //TODO
     case MintToken                    = 0x1C
     case BurnToken                    = 0x1D
     case CreateToken                  = 0x1E
     case RecreateToken                = 0x1F
-    case VoteCommission               = 0x20
+    case VoteCommission               = 0x20 //TODO
     case VoteUpdate                   = 0x21
     case CreateSwapPool               = 0x22
     case AddLimitOrder                = 0x23
