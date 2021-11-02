@@ -1,6 +1,8 @@
-# minter-swift-sdk
+# Minter Kit
 
-A description of this package.
+Alpha version of Minter Kit for Apple developers
+
+!!! NOT FOR PRODUCTION !!!
 
 #### Third Party
 

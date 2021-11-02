@@ -4,12 +4,17 @@
 import Foundation
 import HDWalletKit
 import MinterTransaction
+import GRPC
+import NIO
+import MinterGRPC
 
 open class MinterWallet {
-    var nodeURL: URL?
+    var gRPCClient: MinterApiServiceClient?
     var chainId: BInt
     var mnemonic: String
     var privateKey: PrivateKey
+    
+    private var group: MultiThreadedEventLoopGroup
     
     public init(chainId: BInt = 1){
         self.chainId = chainId
@@ -25,6 +30,32 @@ open class MinterWallet {
         let change = account.derived(at: .notHardened(0))
         // m/44'/60'/0'/0/0
         self.privateKey = change.derived(at: .notHardened(0))
+        
+        self.group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+    }
+    
+    public init(chainId: BInt = 1, nodeHost: String, nodeGRPCPort: Int = 8842) throws {
+        self.chainId = chainId
+        self.mnemonic = Mnemonic.create()
+        let seed = Mnemonic.createSeed(mnemonic:  self.mnemonic)
+        let privateKey = PrivateKey(seed: seed, coin: .ethereum)
+        let purpose = privateKey.derived(at: .hardened(44))
+        // m/44'/60'
+        let coinType = purpose.derived(at: .hardened(60))
+        // m/44'/60'/0'
+        let account = coinType.derived(at: .hardened(0))
+        // m/44'/60'/0'/0
+        let change = account.derived(at: .notHardened(0))
+        // m/44'/60'/0'/0/0
+        self.privateKey = change.derived(at: .notHardened(0))
+        self.group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        
+        let channel = try? GRPCChannelPool.with(
+            target: .hostAndPort(nodeHost, nodeGRPCPort),
+            transportSecurity: .plaintext,
+            eventLoopGroup: group
+        )
+        self.gRPCClient = MinterApiServiceClient.init(channel: channel!)
     }
     
     public init(mnemonic: String, chainId: BInt = 1){
@@ -41,10 +72,75 @@ open class MinterWallet {
         let change = account.derived(at: .notHardened(0))
         // m/44'/60'/0'/0/0
         self.privateKey = change.derived(at: .notHardened(0))
+        self.group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
     }
     
+    public init(mnemonic: String, chainId: BInt = 1, nodeHost: String, nodeGRPCPort: Int = 8842){
+        self.chainId = chainId
+        self.mnemonic = mnemonic
+        let seed = Mnemonic.createSeed(mnemonic:  self.mnemonic)
+        let privateKey = PrivateKey(seed: seed, coin: .ethereum)
+        let purpose = privateKey.derived(at: .hardened(44))
+        // m/44'/60'
+        let coinType = purpose.derived(at: .hardened(60))
+        // m/44'/60'/0'
+        let account = coinType.derived(at: .hardened(0))
+        // m/44'/60'/0'/0
+        let change = account.derived(at: .notHardened(0))
+        // m/44'/60'/0'/0/0
+        self.privateKey = change.derived(at: .notHardened(0))
+        
+        self.group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        
+        let channel = try? GRPCChannelPool.with(
+            target: .hostAndPort(nodeHost, nodeGRPCPort),
+            transportSecurity: .plaintext,
+            eventLoopGroup: group
+        )
+        
+        self.gRPCClient = MinterApiServiceClient.init(channel: channel!)
+    }
+    
+    public func sendTx(_ rawTransaction: MinterRawTransaction) throws -> String{
+        if gRPCClient != nil{
+            do{
+                var hash: String
+                let tx = try sign(rawTransaction)
+                var sendedTx = MinterSendTransactionRequest()
+                sendedTx.tx = "0x"+tx.hex
+                let result = try gRPCClient!.sendTransaction(sendedTx).response.wait()
+                hash = String(describing: result.hash)
+                return hash
+            }catch (HDWalletKitError.cryptoError){
+                throw MinterWalletError.failedToSign
+            }catch{
+                throw MinterWalletError.GRPCError
+            }
+        }
+        
+        throw MinterWalletError.emptyGRPCClient
+    }
+    
+    public func getNonce() throws -> Int{
+        if gRPCClient == nil{
+            throw MinterWalletError.emptyGRPCClient
+        }
+        
+        do{
+            var request = MinterAddressRequest()
+            request.address = getAddress()
+            let result = try gRPCClient!.address(request).response.wait()
+            return Int(result.transactionCount)+1
+        }catch{
+            let e = error
+            print("\(e)")
+            throw MinterWalletError.unknownError
+        }
+    }
+    
+    
     public func getPhrase() -> String{
-        return mnemonic
+        return self.mnemonic
     }
     
     public func getSeed() -> Data{
@@ -101,6 +197,10 @@ open class MinterWallet {
         )
     }
     
+    public func close(){
+        try! group.syncShutdownGracefully()
+    }
+    
     private func signTransaction(signature: Data, rawTransaction: MinterRawTransaction) throws -> Data {
         let (r, s, v) = calculateRSV(signature: signature)
         let txData = try rawTransaction.data.encodeRLP()
@@ -119,6 +219,4 @@ open class MinterWallet {
             sData!
         ])
     }
-    
-    
 }

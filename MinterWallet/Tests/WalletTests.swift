@@ -5,7 +5,33 @@ import HDWalletKit
 
 final class WalletTests: XCTestCase {
     
-    let wallet = MinterWallet(mnemonic: "window fun element nominee connect danger belt service race mutual resource zero")
+    let wallet = MinterWallet(mnemonic: "window fun element nominee connect danger belt service race mutual resource zero", nodeHost: "node-v2.testnet.minter.network", nodeGRPCPort: 8842)
+    
+    func testSendTx() {
+        let txSendData = SendData(to: "Mxae1cb84fe2006ecbd8999d1db2c1e6a6b1362d5e", coinId: 0,value: BInt("1000000000000000000")!)
+        
+        defer {
+            wallet.close()
+        }
+        
+        do {
+            let nonce = try wallet.getNonce()
+            
+            let txSend = MinterRawTransaction(
+                chainId: 2,
+                nonce: nonce,
+                type:TransactionType.Send,
+                gasCoin: 0,
+                gasPrice: 1,
+                signatureType: SignatureType.single,
+                data: txSendData
+            )
+            
+            XCTAssertNoThrow(try wallet.sendTx(txSend))
+        }catch{
+            print("\(error)")
+        }
+    }
     
     func testAddress() {
         XCTAssertEqual(wallet.getAddress(), "Mxae1cb84fe2006ecbd8999d1db2c1e6a6b1362d5e")
