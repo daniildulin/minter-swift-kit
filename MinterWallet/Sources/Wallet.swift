@@ -50,12 +50,12 @@ open class MinterWallet {
         self.privateKey = change.derived(at: .notHardened(0))
         self.group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
         
-        let channel = try? GRPCChannelPool.with(
+        let channel = try GRPCChannelPool.with(
             target: .hostAndPort(nodeHost, nodeGRPCPort),
             transportSecurity: .plaintext,
             eventLoopGroup: group
         )
-        self.gRPCClient = MinterApiServiceClient.init(channel: channel!)
+        self.gRPCClient = MinterApiServiceClient.init(channel: channel)
     }
     
     public init(mnemonic: String, chainId: BInt = 1){
@@ -75,7 +75,7 @@ open class MinterWallet {
         self.group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
     }
     
-    public init(mnemonic: String, chainId: BInt = 1, nodeHost: String, nodeGRPCPort: Int = 8842){
+    public init(mnemonic: String, chainId: BInt = 1, nodeHost: String, nodeGRPCPort: Int = 8842) throws{
         self.chainId = chainId
         self.mnemonic = mnemonic
         let seed = Mnemonic.createSeed(mnemonic:  self.mnemonic)
@@ -92,13 +92,13 @@ open class MinterWallet {
         
         self.group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
         
-        let channel = try? GRPCChannelPool.with(
+        let channel = try GRPCChannelPool.with(
             target: .hostAndPort(nodeHost, nodeGRPCPort),
             transportSecurity: .plaintext,
             eventLoopGroup: group
         )
         
-        self.gRPCClient = MinterApiServiceClient.init(channel: channel!)
+        self.gRPCClient = MinterApiServiceClient.init(channel: channel)
     }
     
     public func sendTx(_ rawTransaction: MinterRawTransaction) throws -> String{
@@ -136,6 +136,21 @@ open class MinterWallet {
             print("\(e)")
             throw MinterWalletError.unknownError
         }
+    }
+    
+    public func getBalance() throws -> Balance{
+        if gRPCClient == nil{
+            throw MinterWalletError.emptyGRPCClient
+        }
+        var request = MinterAddressRequest()
+        request.address = getAddress()
+        let result = try gRPCClient!.address(request).response.wait()
+        let balance = Balance()
+        result.balance.forEach { c in
+            let coin = BalanceCoin(id: c.coin.id, symbol: c.coin.symbol, value: c.value)
+            balance.addCoin(coin: coin)
+        }
+        return balance
     }
     
     
