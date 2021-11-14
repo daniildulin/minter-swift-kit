@@ -6,9 +6,9 @@
 //
 
 public class BalanceCoin{
-    var id: UInt64
-    var symbol: String
-    var value: String
+    public var id: UInt64
+    public var symbol: String
+    public var value: String
     
     public init(id: UInt64, symbol: String, value: String) {
         self.id = id
@@ -18,7 +18,7 @@ public class BalanceCoin{
 }
 
 public class Balance {
-    var coins: [BalanceCoin] = []
+    public var coins: [BalanceCoin] = []
     func addCoin(coin: BalanceCoin){
         self.coins.append(coin)
     }
