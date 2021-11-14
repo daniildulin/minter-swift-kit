@@ -147,12 +147,11 @@ open class MinterWallet {
         let result = try gRPCClient!.address(request).response.wait()
         let balance = Balance()
         result.balance.forEach { c in
-            let coin = BalanceCoin(id: c.coin.id, symbol: c.coin.symbol, value: c.value)
+            let coin = BalanceCoin(id: c.coin.id, symbol: c.coin.symbol, pipValue: c.value)
             balance.addCoin(coin: coin)
         }
         return balance
     }
-    
     
     public func getPhrase() -> String{
         return self.mnemonic

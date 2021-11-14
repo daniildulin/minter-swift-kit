@@ -9,6 +9,15 @@ final class WalletTests: XCTestCase {
     let port = 8842
     let phrase = "window fun element nominee connect danger belt service race mutual resource zero"
     
+    func testPipToValue(){
+        var x = "10000000000000000000000"
+        for _ in 1...10 {
+            let coin = BalanceCoin(id: 0, symbol: "MNT", pipValue: x)
+            XCTAssertNoThrow(try coin.getValue())
+            x = x + "00000"
+        }
+    }
+    
     func testBalance(){
         do{
             let wallet = try MinterWallet(mnemonic: phrase, nodeHost: host, nodeGRPCPort: port)
@@ -285,6 +294,7 @@ final class WalletTests: XCTestCase {
     }
     
     static var allTests = [
+        ("testPipToValue", testPipToValue),
         ("testBalance", testBalance),
         ("testAddress", testAddress),
         ("testSignSendTx", testSignSendTx),
