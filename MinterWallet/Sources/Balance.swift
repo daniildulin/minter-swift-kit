@@ -18,7 +18,12 @@ public class BalanceCoin{
 }
 
 public class Balance {
-    public var coins: [BalanceCoin] = []
+    public var coins: [BalanceCoin]
+    
+    public init() {
+        self.coins = []
+    }
+    
     func addCoin(coin: BalanceCoin){
         self.coins.append(coin)
     }
