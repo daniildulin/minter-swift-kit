@@ -8,5 +8,5 @@
 import Foundation
 
 public class MinterGateSendTxResponse: Codable {
-    let tx: String
+    public var tx: String
 }

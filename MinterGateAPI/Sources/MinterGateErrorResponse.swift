@@ -7,7 +7,7 @@
 
 
 public class MinterGateErrorResponse: Codable {
-    let error: ErrorData
+    public var error: ErrorData
     
     enum CodingKeys: String, CodingKey {
         case error = "error"
@@ -15,7 +15,7 @@ public class MinterGateErrorResponse: Codable {
 }
 
 public class ErrorData: Codable {
-    let code, message: String
+    public var code, message: String
     
     enum CodingKeys: String, CodingKey {
         case code

@@ -8,7 +8,7 @@
 import Foundation
 
 public class MinterGateMinGasResponse: Codable {
-    let minGasPrice: String
+    public var minGasPrice: String
     
     enum CodingKeys: String, CodingKey {
         case minGasPrice = "min_gas_price"

@@ -8,9 +8,9 @@
 import Foundation
 
 public class MinterGateNonceResponse: Codable {
-    let data: MinterGateNonceData
+    public var data: MinterGateNonceData
 }
 
 public class MinterGateNonceData: Codable {
-    let nonce: String
+    public var nonce: String
 }

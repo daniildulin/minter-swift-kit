@@ -20,9 +20,9 @@ struct MinterExplorerAddressResponse: Codable {
 
 // MARK: - MinterExplorerAddressData
 public class MinterExplorerAddressData: Codable {
-    let address: String
-    let balances: [BalanceElement]
-    let totalBalanceSum, totalBalanceSumUsd, stakeBalanceSum, stakeBalanceSumUsd: String
+    public var address: String
+    public var balances: [BalanceElement]
+    public var totalBalanceSum, totalBalanceSumUsd, stakeBalanceSum, stakeBalanceSumUsd: String
 
     enum CodingKeys: String, CodingKey {
         case address, balances
@@ -34,8 +34,8 @@ public class MinterExplorerAddressData: Codable {
 }
 
 public class BalanceElement: Codable {
-    let coin: Coin
-    let amount, bipAmount: String
+    public var coin: Coin
+    public var amount, bipAmount: String
 
     enum CodingKeys: String, CodingKey {
         case coin, amount
@@ -44,6 +44,6 @@ public class BalanceElement: Codable {
 }
 
 public class Coin: Codable {
-    let id: Int
-    let type, symbol: String
+    public var id: Int
+    public var type, symbol: String
 }

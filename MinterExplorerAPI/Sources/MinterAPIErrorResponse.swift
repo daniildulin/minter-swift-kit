@@ -8,10 +8,10 @@
 import Foundation
 
 public class MinterAPIErrorResponse: Codable {
-    let error: MinterAPIErrorData
+    public var error: MinterAPIErrorData
 }
 
 public class MinterAPIErrorData: Codable {
-    let code: Int
-    let message: String
+    public var code: Int
+    public var message: String
 }
