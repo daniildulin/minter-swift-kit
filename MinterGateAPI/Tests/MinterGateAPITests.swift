@@ -10,7 +10,7 @@ import XCTest
 
 final class MinterGateAPITests: XCTestCase {
     
-    let api = MinterGateAPI(host: "https://gate-api.taconet.minter.network")
+    let api = MinterGateAPI(host: "")
     
     func testGetMinGas()   {
         api.getMinGas{ result in

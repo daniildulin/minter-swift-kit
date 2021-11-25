@@ -3,7 +3,7 @@ import XCTest
 
 final class MinterExplorerAPITests: XCTestCase {
     
-    let api = MinterExplorerAPI(host: "https://explorer-api.taconet.minter.network")
+    let api = MinterExplorerAPI(host: "")
     private var tmpStringResult: String = ""
     
     func testAddress()   {
