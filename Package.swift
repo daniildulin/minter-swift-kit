@@ -19,6 +19,12 @@ let package = Package(
         .library(
             name: "MinterGRPC",
             targets: ["MinterGRPC"]),
+        .library(
+            name: "MinterExplorerAPI",
+            targets: ["MinterExplorerAPI"]),
+        .library(
+            name: "MinterGateAPI",
+            targets: ["MinterGateAPI"]),
     ],
     dependencies: [
         .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMajor(from: "1.4.2")),
@@ -78,6 +84,30 @@ let package = Package(
             name: "MinterWalletTest",
             dependencies: ["MinterWallet", "MinterTransaction", "MinterGRPC"],
             path: "MinterWallet/Tests"
+        ),
+        .target(
+            name: "MinterExplorerAPI",
+            path: "MinterExplorerAPI/Sources",
+            linkerSettings: [
+                .linkedFramework("SystemConfiguration", .when(platforms: [.iOS, .macOS, .tvOS])),
+            ]
+        ),
+        .testTarget(
+            name: "MinterExplorerAPITest",
+            dependencies: ["MinterExplorerAPI"],
+            path: "MinterExplorerAPI/Tests"
+        ),
+        .target(
+            name: "MinterGateAPI",
+            path: "MinterGateAPI/Sources",
+            linkerSettings: [
+                .linkedFramework("SystemConfiguration", .when(platforms: [.iOS, .macOS, .tvOS])),
+            ]
+        ),
+        .testTarget(
+            name: "MinterGateAPITest",
+            dependencies: ["MinterGateAPI"],
+            path: "MinterGateAPI/Tests"
         ),
     ]
 )
