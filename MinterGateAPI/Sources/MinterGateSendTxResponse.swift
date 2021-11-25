@@ -7,6 +7,6 @@
 
 import Foundation
 
-class MinterGateSendTxResponse: Codable {
+public class MinterGateSendTxResponse: Codable {
     let tx: String
 }

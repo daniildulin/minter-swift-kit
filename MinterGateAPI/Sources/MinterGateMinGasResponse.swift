@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MinterGateMinGasResponse: Codable {
+public class MinterGateMinGasResponse: Codable {
     let minGasPrice: String
     
     enum CodingKeys: String, CodingKey {

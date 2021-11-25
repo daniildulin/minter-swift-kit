@@ -19,7 +19,7 @@ struct MinterExplorerAddressResponse: Codable {
 }
 
 // MARK: - MinterExplorerAddressData
-struct MinterExplorerAddressData: Codable {
+public class MinterExplorerAddressData: Codable {
     let address: String
     let balances: [BalanceElement]
     let totalBalanceSum, totalBalanceSumUsd, stakeBalanceSum, stakeBalanceSumUsd: String
@@ -33,7 +33,7 @@ struct MinterExplorerAddressData: Codable {
     }
 }
 
-struct BalanceElement: Codable {
+public class BalanceElement: Codable {
     let coin: Coin
     let amount, bipAmount: String
 
@@ -43,7 +43,7 @@ struct BalanceElement: Codable {
     }
 }
 
-struct Coin: Codable {
+public class Coin: Codable {
     let id: Int
     let type, symbol: String
 }

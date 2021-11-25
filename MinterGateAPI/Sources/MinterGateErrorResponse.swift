@@ -6,7 +6,7 @@
 //
 
 
-struct MinterGateErrorResponse: Codable {
+public class MinterGateErrorResponse: Codable {
     let error: ErrorData
     
     enum CodingKeys: String, CodingKey {
@@ -14,7 +14,7 @@ struct MinterGateErrorResponse: Codable {
     }
 }
 
-struct ErrorData: Codable {
+public class ErrorData: Codable {
     let code, message: String
     
     enum CodingKeys: String, CodingKey {

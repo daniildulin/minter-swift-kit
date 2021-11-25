@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct MinterGateNonceResponse: Codable {
+public class MinterGateNonceResponse: Codable {
     let data: MinterGateNonceData
 }
 
-struct MinterGateNonceData: Codable {
+public class MinterGateNonceData: Codable {
     let nonce: String
 }

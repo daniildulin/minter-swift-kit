@@ -7,6 +7,6 @@
 
 import Foundation
 
-enum MinterApiError: Error {
+public enum MinterApiError: Error {
     case badResponce(String)
 }

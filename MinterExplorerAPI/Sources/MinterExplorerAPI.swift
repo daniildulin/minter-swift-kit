@@ -20,7 +20,7 @@ public class MinterExplorerAPI{
         self.host = URLComponents(string: host)!
     }
         
-    func getBalance(address: String, completion: @escaping (Result<MinterExplorerAddressData, Error> ) -> ()) {
+    public func getBalance(address: String, completion: @escaping (Result<MinterExplorerAddressData, Error> ) -> ()) {
         var addressHost = host
         addressHost.path = "/api/v2/addresses/\(address)"
         addressHost.queryItems = [

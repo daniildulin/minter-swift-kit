@@ -7,7 +7,6 @@
 
 import Foundation
 
-
-enum GateError: Error {
+public enum GateError: Error {
     case badResponce(String)
 }

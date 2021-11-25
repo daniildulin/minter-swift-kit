@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct MinterAPIErrorResponse: Codable {
+public class MinterAPIErrorResponse: Codable {
     let error: MinterAPIErrorData
 }
 
-struct MinterAPIErrorData: Codable {
+public class MinterAPIErrorData: Codable {
     let code: Int
     let message: String
 }

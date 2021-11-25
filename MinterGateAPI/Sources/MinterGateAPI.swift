@@ -20,7 +20,7 @@ public class MinterGateAPI{
         self.host = URLComponents(string: host)!
     }
     
-    func getMinGas(completion: @escaping (Result<Int, Error>) -> ()) {
+    public func getMinGas(completion: @escaping (Result<Int, Error>) -> ()) {
         var link = host
         link.path = "/api/v2/min_gas_price"
         
@@ -53,7 +53,7 @@ public class MinterGateAPI{
         }.resume()
     }
     
-    func getNonce(address: String, completion: @escaping (Result<Int, Error>) -> ()) {
+    public func getNonce(address: String, completion: @escaping (Result<Int, Error>) -> ()) {
         var link = host
         link.path = "/api/v1/nonce/\(address)"
         
@@ -86,7 +86,7 @@ public class MinterGateAPI{
         }.resume()
     }
     
-    func sendTransaction(tx: String, completionHandler: @escaping (Result<MinterGateSendTxResponse, Error>) -> Void) {
+    public func sendTransaction(tx: String, completionHandler: @escaping (Result<MinterGateSendTxResponse, Error>) -> Void) {
         var link = host
         link.path = "/api/v2/send_transaction"
         
