@@ -30,7 +30,6 @@ open class MinterWallet {
         let change = account.derived(at: .notHardened(0))
         // m/44'/60'/0'/0/0
         self.privateKey = change.derived(at: .notHardened(0))
-        
         self.group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
     }
     
@@ -75,6 +74,14 @@ open class MinterWallet {
         self.group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
     }
     
+    public init(privateKey: String, chainId: BInt = 1){
+        self.chainId = chainId
+        self.mnemonic = ""
+        let privateKey = PrivateKey(pk: privateKey, coin: .ethereum)
+        self.privateKey = privateKey!
+        self.group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+    }
+    
     public init(mnemonic: String, chainId: BInt = 1, nodeHost: String, nodeGRPCPort: Int = 8842) throws{
         self.chainId = chainId
         self.mnemonic = mnemonic
@@ -99,6 +106,24 @@ open class MinterWallet {
         )
         
         self.gRPCClient = MinterApiServiceClient.init(channel: channel)
+    }
+    
+    public init(privateKey: String, chainId: BInt = 1, nodeHost: String, nodeGRPCPort: Int = 8842) throws{
+        self.chainId = chainId
+        self.mnemonic = ""
+        let privateKey = PrivateKey(pk: privateKey, coin: .ethereum)
+        self.privateKey = privateKey!
+        self.group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        let channel = try GRPCChannelPool.with(
+            target: .hostAndPort(nodeHost, nodeGRPCPort),
+            transportSecurity: .plaintext,
+            eventLoopGroup: group
+        )
+        self.gRPCClient = MinterApiServiceClient.init(channel: channel)
+    }
+    
+    public func getPrivateKey() -> String{
+        return self.privateKey.get()
     }
     
     public func sendTx(_ rawTransaction: MinterRawTransaction) throws -> String{
