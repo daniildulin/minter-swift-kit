@@ -9,13 +9,19 @@ final class WalletTests: XCTestCase {
     let port = 8842
     let phrase = "window fun element nominee connect danger belt service race mutual resource zero"
     
-    func testPipToValue(){
+    func testPipToCoin(){
         var x = "10000000000000000000000"
         for _ in 1...10 {
-            let coin = BalanceCoin(id: 0, symbol: "MNT", pipValue: x)
-            XCTAssertNoThrow(try coin.getValue())
+            XCTAssertNoThrow(try MinterWallet.pipToCoin(pipValue: x))
             x = x + "00000"
         }
+    }
+    
+    func testCoinToPip(){
+        var x = MinterWallet.coinToPip(coinValue: 0.000000000000000001)
+        XCTAssertEqual(x, "1")
+        x = MinterWallet.coinToPip(coinValue: 1000000)
+        XCTAssertEqual(x, "1000000000000000000000000")
     }
     
     func testBalance(){
@@ -294,7 +300,8 @@ final class WalletTests: XCTestCase {
     }
     
     static var allTests = [
-        ("testPipToValue", testPipToValue),
+        ("testPipToValue", testPipToCoin),
+        ("testCoinToPip", testCoinToPip),
         ("testBalance", testBalance),
         ("testAddress", testAddress),
         ("testSignSendTx", testSignSendTx),

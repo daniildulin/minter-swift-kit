@@ -240,6 +240,29 @@ open class MinterWallet {
         try! group.syncShutdownGracefully()
     }
     
+    public static func pipToCoin(pipValue: String) throws -> String {
+        guard let pip = BInt(pipValue, radix: 10),
+              let  decimalPip = Decimal(string: pip.description) else {
+            throw HDWalletKitError.convertError(.failedToConvert(pipValue))
+        }
+        let result =  decimalPip / pow(Decimal(10), 18)
+        return result.description
+    }
+    
+    public static func coinToPip(coinValue: UInt) -> String {
+        return coinToPip(coinValue: Decimal(coinValue))
+    }
+    
+    public static func coinToPip(coinValue: Int) -> String {
+        return coinToPip(coinValue: Decimal(coinValue))
+    }
+    
+    public static func coinToPip(coinValue: Decimal) -> String {
+        let result =  coinValue * pow(Decimal(10), 18)
+        let numberComponent = result.description.components(separatedBy :".")
+        return numberComponent[0]
+    }
+    
     private func signTransaction(signature: Data, rawTransaction: MinterRawTransaction) throws -> Data {
         let (r, s, v) = calculateRSV(signature: signature)
         let txData = try rawTransaction.data.encodeRLP()
