@@ -249,18 +249,18 @@ open class MinterWallet {
         return result.description
     }
     
-    public static func coinToPip(coinValue: UInt) -> String {
+    public static func coinToPip(coinValue: UInt) -> BInt {
         return coinToPip(coinValue: Decimal(coinValue))
     }
     
-    public static func coinToPip(coinValue: Int) -> String {
+    public static func coinToPip(coinValue: Int) -> BInt {
         return coinToPip(coinValue: Decimal(coinValue))
     }
     
-    public static func coinToPip(coinValue: Decimal) -> String {
+    public static func coinToPip(coinValue: Decimal) -> BInt {
         let result =  coinValue * pow(Decimal(10), 18)
         let numberComponent = result.description.components(separatedBy :".")
-        return numberComponent[0]
+        return BInt(numberComponent[0]) ?? BInt(0)
     }
     
     private func signTransaction(signature: Data, rawTransaction: MinterRawTransaction) throws -> Data {

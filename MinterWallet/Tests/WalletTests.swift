@@ -19,9 +19,9 @@ final class WalletTests: XCTestCase {
     
     func testCoinToPip(){
         var x = MinterWallet.coinToPip(coinValue: 0.000000000000000001)
-        XCTAssertEqual(x, "1")
+        XCTAssertEqual(x, BInt(1))
         x = MinterWallet.coinToPip(coinValue: 1000000)
-        XCTAssertEqual(x, "1000000000000000000000000")
+        XCTAssertEqual(x, BInt("1000000000000000000000000")!)
     }
     
     func testBalance(){
