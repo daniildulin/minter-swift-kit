@@ -2,7 +2,6 @@ import XCTest
 @testable import MinterExplorerAPI
 
 final class MinterExplorerAPITests: XCTestCase {
-    
     let api = MinterExplorerAPI(host: "")
     private var tmpStringResult: String = ""
     
@@ -15,11 +14,26 @@ final class MinterExplorerAPITests: XCTestCase {
                 print ("\(error)")
             }
         }
+    }
+    
+    func testCoinInfo()   {
+        var id = 0
+        api.getCoinInfo(symbol: "HUB"){ result in
+            switch result{
+            case .success(let data):
+                id = data.id
+                print ("Coin id: \(data.id)")
+            case .failure(let error):
+                print ("\(error)")
+                
+            }
+        }
         sleep(1)
-        XCTAssertEqual(1, 0)
+        XCTAssertEqual(id, 1902)
     }
     
     static var allTests = [
         ("testAddress", testAddress),
+        ("testCoinInfo", testCoinInfo),
     ]
 }
