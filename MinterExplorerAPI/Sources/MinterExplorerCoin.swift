@@ -12,11 +12,11 @@ public class MinterExplorerCoinResponse: Codable{
 }
 
 public class  MinterExplorerCoin: Codable {
-    var id, crr: Int
-    var volume, reserveBalance, maxSupply, name: String
-    var symbol, ownerAddress: String
-    var burnable, mintable: Bool
-    var type: String
+    public var id, crr: Int
+    public var volume, reserveBalance, maxSupply, name: String
+    public var symbol, ownerAddress: String
+    public var burnable, mintable: Bool
+    public var type: String
 
     enum CodingKeys: String, CodingKey {
         case id, crr, volume
