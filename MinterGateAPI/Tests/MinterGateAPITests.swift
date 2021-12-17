@@ -11,8 +11,10 @@ import XCTest
 final class MinterGateAPITests: XCTestCase {
     
     let api = MinterGateAPI(host: "")
+    let group = DispatchGroup()
     
     func testGetMinGas()   {
+        group.enter()
         api.getMinGas{ result in
             switch result{
             case .success(let data):
@@ -20,12 +22,14 @@ final class MinterGateAPITests: XCTestCase {
             case .failure(let error):
                 print ("\(error)")
             }
+            self.group.leave()
         }
-        sleep(1)
+        group.wait()
         XCTAssertEqual(1, 0)
     }
     
     func testGetNonce()   {
+        group.enter()
         api.getNonce(address: "Mx0e5538dd7f76ba825d1db4a0733b01f3df38c859"){ result in
             switch result{
             case .success(let data):
@@ -33,12 +37,14 @@ final class MinterGateAPITests: XCTestCase {
             case .failure(let error):
                 print ("\(error)")
             }
+            self.group.leave()
         }
-        sleep(1)
+        group.wait()
         XCTAssertEqual(1, 0)
     }
     
     func testSendTx()   {
+        group.enter()
         api.sendTransaction(tx: "0xf8"){ result in
             switch result{
             case .success(let data):
@@ -46,9 +52,9 @@ final class MinterGateAPITests: XCTestCase {
             case .failure(let error):
                 print ("\(error)")
             }
+            self.group.leave()
         }
-        sleep(1)
-        
+        group.wait()
         XCTAssertEqual(1, 0)
     }
     

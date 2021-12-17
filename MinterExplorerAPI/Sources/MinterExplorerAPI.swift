@@ -19,7 +19,7 @@ public class MinterExplorerAPI{
     public init (host: String){
         self.host = URLComponents(string: host)!
     }
-        
+    
     public func getBalance(address: String, completion: @escaping (Result<MinterExplorerAddressData, Error> ) -> ()) {
         var addressHost = host
         addressHost.path = "/api/v2/addresses/\(address)"
@@ -29,14 +29,14 @@ public class MinterExplorerAPI{
         
         session.dataTask(with: addressHost.url!) { (jsonData, response, error) in
             if let error = error {
-                print(error.localizedDescription)
+                completion(.failure(error))
                 return
             }
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
                       do{
                           let response = try JSONDecoder().decode(MinterAPIErrorResponse.self, from: jsonData!)
-                          DispatchQueue.main.async {
+                          DispatchQueue.global(qos: .userInteractive).async {
                               completion(.failure(MinterApiError.badResponce(response.error.message)))
                           }
                       }catch {
@@ -46,11 +46,11 @@ public class MinterExplorerAPI{
                   }
             do{
                 let response = try JSONDecoder().decode(MinterExplorerAddressResponse.self, from: jsonData!)
-                DispatchQueue.main.async {
+                DispatchQueue.global(qos: .userInteractive).async {
                     completion(.success(response.data))
                 }
             }catch {
-                print("JSON error: \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }.resume()
     }
@@ -61,14 +61,14 @@ public class MinterExplorerAPI{
         
         session.dataTask(with: addressHost.url!) { (jsonData, response, error) in
             if let error = error {
-                print(error.localizedDescription)
+                completion(.failure(error))
                 return
             }
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
                       do{
                           let response = try JSONDecoder().decode(MinterAPIErrorResponse.self, from: jsonData!)
-                          DispatchQueue.main.async {
+                          DispatchQueue.global(qos: .userInteractive).async {
                               completion(.failure(MinterApiError.badResponce(response.error.message)))
                           }
                       }catch {
@@ -78,11 +78,11 @@ public class MinterExplorerAPI{
                   }
             do{
                 let response = try JSONDecoder().decode(MinterExplorerCoinResponse.self, from: jsonData!)
-                DispatchQueue.main.async {
+                DispatchQueue.global(qos: .userInteractive).async {
                     completion(.success(response.data))
                 }
             }catch {
-                print("JSON error: \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }.resume()
     }
@@ -93,14 +93,14 @@ public class MinterExplorerAPI{
         
         session.dataTask(with: addressHost.url!) { (jsonData, response, error) in
             if let error = error {
-                print(error.localizedDescription)
+                completion(.failure(error))
                 return
             }
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
                       do{
                           let response = try JSONDecoder().decode(MinterAPIErrorResponse.self, from: jsonData!)
-                          DispatchQueue.main.async {
+                          DispatchQueue.global(qos: .userInteractive).async {
                               completion(.failure(MinterApiError.badResponce(response.error.message)))
                           }
                       }catch {
@@ -110,11 +110,11 @@ public class MinterExplorerAPI{
                   }
             do{
                 let response = try JSONDecoder().decode(MinterExplorerCoinResponse.self, from: jsonData!)
-                DispatchQueue.main.async {
+                DispatchQueue.global(qos: .userInteractive).async {
                     completion(.success(response.data))
                 }
             }catch {
-                print("JSON error: \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }.resume()
     }

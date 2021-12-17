@@ -9,7 +9,6 @@ import Foundation
 
 public class MinterGateAPI{
     public var host:URLComponents
-    
     private var session = URLSession.shared
     
     public enum MinterGateError: Error {
@@ -26,14 +25,14 @@ public class MinterGateAPI{
         
         session.dataTask(with: link.url!) { (jsonData, response, error) in
             if let error = error {
-                print(error.localizedDescription)
+                completion(.failure(error))
                 return
             }
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
                       do{
                           let response = try JSONDecoder().decode(MinterGateErrorResponse.self, from: jsonData!)
-                          DispatchQueue.main.async {
+                          DispatchQueue.global(qos: .userInteractive).async {
                               completion(.failure(GateError.badResponce(response.error.message)))
                           }
                       }catch {
@@ -48,7 +47,7 @@ public class MinterGateAPI{
                     completion(.success(result))
                 }
             }catch {
-                print("JSON error: \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }.resume()
     }
@@ -59,14 +58,14 @@ public class MinterGateAPI{
         
         session.dataTask(with: link.url!) { (jsonData, response, error) in
             if let error = error {
-                print(error.localizedDescription)
+                completion(.failure(error))
                 return
             }
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
                       do{
                           let response = try JSONDecoder().decode(MinterGateErrorResponse.self, from: jsonData!)
-                          DispatchQueue.main.async {
+                          DispatchQueue.global(qos: .userInteractive).async {
                               completion(.failure(GateError.badResponce(response.error.message)))
                           }
                       }catch {
@@ -76,12 +75,12 @@ public class MinterGateAPI{
                   }
             do{
                 let response = try JSONDecoder().decode(MinterGateNonceResponse.self, from: jsonData!)
-                DispatchQueue.main.async {
+                DispatchQueue.global(qos: .userInteractive).async {
                     let result = Int(response.data.nonce) ?? 0
                     completion(.success(result+1))
                 }
             }catch {
-                print("JSON error: \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }.resume()
     }
@@ -105,7 +104,7 @@ public class MinterGateAPI{
                   (200...299).contains(httpResponse.statusCode) else {
                       do{
                           let response = try JSONDecoder().decode(MinterGateErrorResponse.self, from: data)
-                          DispatchQueue.main.async {
+                          DispatchQueue.global(qos: .userInteractive).async {
                               completionHandler(.failure(GateError.badResponce(response.error.message)))
                           }
                       }catch {
@@ -116,7 +115,7 @@ public class MinterGateAPI{
             
             do{
                 let response = try JSONDecoder().decode(MinterGateSendTxResponse.self, from: data)
-                DispatchQueue.main.async {
+                DispatchQueue.global(qos: .userInteractive).async {
                     completionHandler(.success(response))
                 }
             }catch {
