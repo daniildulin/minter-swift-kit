@@ -7,6 +7,10 @@
 
 import Foundation
 
+public class MinterExplorerCoinsListResponse: Codable{
+    public var data: [MinterExplorerCoin]
+}
+
 public class MinterExplorerCoinResponse: Codable{
     public var data: MinterExplorerCoin
 }
@@ -14,7 +18,8 @@ public class MinterExplorerCoinResponse: Codable{
 public class  MinterExplorerCoin: Codable {
     public var id, crr: Int
     public var volume, reserveBalance, maxSupply, name: String
-    public var symbol, ownerAddress: String
+    public var symbol: String
+    public var ownerAddress: String?
     public var burnable, mintable: Bool
     public var type: String
 

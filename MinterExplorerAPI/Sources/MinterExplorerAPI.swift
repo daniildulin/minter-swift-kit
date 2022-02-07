@@ -118,4 +118,37 @@ public class MinterExplorerAPI{
             }
         }.resume()
     }
+    
+    
+    public func getHubCoinInfo(completion: @escaping (Result<[MinterExplorerCoin], Error> ) -> ()) {
+        var addressHost = host
+        addressHost.path = "/api/v2/coins/oracle/verified"
+        
+        session.dataTask(with: addressHost.url!) { (jsonData, response, error) in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                      do{
+                          let response = try JSONDecoder().decode(MinterAPIErrorResponse.self, from: jsonData!)
+                          DispatchQueue.global(qos: .userInteractive).async {
+                              completion(.failure(MinterApiError.badResponce(response.error.message)))
+                          }
+                      }catch {
+                          completion(.failure(error))
+                      }
+                      return
+                  }
+            do{
+                let response = try JSONDecoder().decode(MinterExplorerCoinsListResponse.self, from: jsonData!)
+                DispatchQueue.global(qos: .userInteractive).async {
+                    completion(.success(response.data))
+                }
+            }catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
 }

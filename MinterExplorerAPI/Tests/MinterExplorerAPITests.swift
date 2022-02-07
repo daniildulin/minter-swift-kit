@@ -33,6 +33,22 @@ final class MinterExplorerAPITests: XCTestCase {
         XCTAssertEqual(id, 1902)
     }
     
+    func testHubCoinInfo()   {
+        group.enter()
+        api.getHubCoinInfo(){ result in
+            switch result{
+            case .success(let data):
+                var list = data
+            case .failure(let error):
+                print ("\(error)")
+            }
+            
+            self.group.leave()
+        }
+        group.wait()
+        XCTAssertNotEqual(1, 0)
+    }
+    
     static var allTests = [
         ("testAddress", testAddress),
         ("testCoinInfo", testCoinInfo),
